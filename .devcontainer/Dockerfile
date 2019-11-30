@@ -25,10 +25,8 @@ RUN apt-get update \
     #
     # Install the Azure CLI
     && apt-get install -y apt-transport-https curl gnupg2 lsb-release \
-    && echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" > /etc/apt/sources.list.d/azure-cli.list \
-    && curl -sL https://packages.microsoft.com/keys/microsoft.asc | apt-key add - 2>/dev/null \
-    && apt-get update \
-    && apt-get install -y azure-cli \
+    # Install the CPP tools
+    && apt-get -y install build-essential cmake cppcheck valgrind \
     #
     # Create a non-root user to use if preferred - see https://aka.ms/vscode-remote/containers/non-root-user.
     && groupadd --gid $USER_GID $USERNAME \
