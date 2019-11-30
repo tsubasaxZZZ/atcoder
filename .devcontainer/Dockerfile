@@ -19,16 +19,12 @@ ARG USER_GID=$USER_UID
 # Configure apt and install packages
 RUN apt-get update \
     && apt-get -y install --no-install-recommends apt-utils dialog 2>&1 \
+    # 
+    # Verify git, process tools, lsb-release (useful for CLI installs) installed
+    && apt-get -y install git iproute2 procps lsb-release \
     #
-    # Verify git, process tools installed
-    && apt-get -y install git iproute2 procps \
-    #
-    # Install the Azure CLI
-    && apt-get install -y apt-transport-https curl gnupg2 lsb-release \
-    && echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" > /etc/apt/sources.list.d/azure-cli.list \
-    && curl -sL https://packages.microsoft.com/keys/microsoft.asc | apt-key add - 2>/dev/null \
-    && apt-get update \
-    && apt-get install -y azure-cli \
+    # Install C++ tools
+    && apt-get -y install build-essential cmake cppcheck valgrind \
     #
     # Create a non-root user to use if preferred - see https://aka.ms/vscode-remote/containers/non-root-user.
     && groupadd --gid $USER_GID $USERNAME \
@@ -44,4 +40,4 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Switch back to dialog for any ad-hoc use of apt-get
-ENV DEBIAN_FRONTEND=
+ENV DEBIAN_FRONTEND=dialog
